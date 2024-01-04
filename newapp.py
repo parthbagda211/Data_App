@@ -5,11 +5,6 @@ import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-
-
-
-
-
 st.title("Exploratory Data Analysis DashBoard")
 
 # Upload data
@@ -62,9 +57,6 @@ if uploaded_file is not None:
             fig = px.scatter(data, x=x_column, y=y_column, title=f'Scatter Plot - {x_column} vs {y_column}')
             st.plotly_chart(fig)
 
-
-        # ... (previous code)
-
     elif selected_plot == "Pie Chart":
         for column in selected_columns:
             # st.subheader(f"Pie Chart - {column}")
@@ -84,14 +76,16 @@ if uploaded_file is not None:
             # st.subheader("Pair Plot")
             fig = px.scatter_matrix(data[selected_columns], title="Pair Plot")
             st.plotly_chart(fig)
-    elif selected_plot == "Heatmap":
-        if len(selected_columns) >= 2:
-            st.subheader(f"Heatmap - {', '.join(selected_columns)}")
-            heatmap_data = data[selected_columns]
-            correlation_matrix = heatmap_data.corr()
-            fig, ax = plt.subplots(figsize=(10, 8))
-            sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
-            st.pyplot(fig)
+
+            
+    # elif selected_plot == "Heatmap":
+    #     if len(selected_columns) >= 2:
+    #         st.subheader(f"Heatmap - {', '.join(selected_columns)}")
+    #         heatmap_data = data[selected_columns]
+    #         correlation_matrix = heatmap_data.corr()
+    #         fig, ax = plt.subplots(figsize=(10, 8))
+    #         sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
+    #         st.pyplot(fig)
 
     elif selected_plot == "Violin Plot":
         if len(selected_columns) >= 2:
@@ -128,31 +122,16 @@ if uploaded_file is not None:
             st.plotly_chart(fig)
 
 
-    # elif selected_plot == "Raincloud Plot":
-    #     if len(selected_columns) == 2:
-    #         st.subheader(f"Raincloud Plot - {', '.join(selected_columns)}")
-    #         fig, ax = plt.subplots(figsize=(10, 8))
-    #         px.RainCloud(x=selected_columns[0], y=selected_columns[1], data=data, ax=ax)
-    #         st.pyplot(fig)
-
-    # Add more conditions for other plot types...
-
-
-# ... (rest of the code)
-
-
-    # Add more conditions for other plot types...
-
-    # elif selected_plot == "Heatmap":
-    #     if len(selected_columns) >= 2:
-    #         st.subheader(f"Heatmap - {', '.join(selected_columns)}")
-    #         heatmap_data = data[selected_columns]
+    elif selected_plot == "Heatmap":
+        if len(selected_columns) >= 2:
+            st.subheader(f"Heatmap - {', '.join(selected_columns)}")
+            heatmap_data = data[selected_columns]
             
-    #         # Replace NaN values with a default value (e.g., 0)
-    #         heatmap_data = heatmap_data.fillna(0)
+            # Replace NaN values with a default value (e.g., 0)
+            heatmap_data = heatmap_data.fillna(0)
 
-    #         correlation_matrix = heatmap_data.corr()
-    #         fig, ax = plt.subplots(figsize=(10, 8))
-    #         sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
-    #         st.pyplot(fig)
+            correlation_matrix = heatmap_data.corr()
+            fig, ax = plt.subplots(figsize=(10, 8))
+            sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
+            st.pyplot(fig)
 
