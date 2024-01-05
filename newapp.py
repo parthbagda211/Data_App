@@ -37,7 +37,7 @@ if uploaded_file is not None:
     st.sidebar.subheader("Data Statistics")
     if st.sidebar.button("Show Data Statistics"):
         st.subheader("Data Statistics")
-        st.text(data.describe())
+        st.write(data.describe())
 
 
 
