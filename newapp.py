@@ -12,13 +12,73 @@ uploaded_file = st.file_uploader("Choose a CSV file", type=["csv"])
 if uploaded_file is not None:
     # Load data into a DataFrame
     data = pd.read_csv(uploaded_file)
+    
+    print(data.info())
+    st.sidebar.title("Data Overview")
 
+
+    st.sidebar.subheader("Data Information")
+    if st.sidebar.button("Show Data Information"):
+        st.subheader("Data Information")
+          
+        null_counts = data.isnull().sum()
+        data_types = data.dtypes
+
+            
+        info_df = pd.DataFrame({
+                'Data Type': data_types,
+                'Null/NA Count': null_counts,
+            })
+
+          
+        st.write(info_df)
 
     
-    st.subheader("Statistics Of Data")
-    st.write(data.describe())
+    st.sidebar.subheader("Data Statistics")
+    if st.sidebar.button("Show Data Statistics"):
+        st.subheader("Data Statistics")
+        st.text(data.describe())
 
-    # Sidebar for user input
+
+
+    st.sidebar.title("Data Operations")
+
+
+
+
+   
+# Groupby operation
+    st.sidebar.subheader("Groupby Operation")
+    groupby_column = st.sidebar.selectbox("Select Column for Groupby", data.columns)
+    agg_function = st.sidebar.selectbox("Select Aggregation Function", ["mean", "sum", "count", "min", "max"])
+    if st.sidebar.button("Apply Groupby"):
+        try:
+            if data[groupby_column].dtype == 'O':  # 'O' represents object data type (non-numeric)
+                grouped_data = data.groupby(groupby_column).agg({groupby_column: agg_function}).reset_index()
+            else:
+                grouped_data = data.groupby(groupby_column).agg(agg_function).reset_index()
+            st.subheader(f"Groupby Operation Result - {groupby_column} by {agg_function}")
+            st.write(grouped_data)
+            st.session_state.groupby_result = grouped_data
+        except Exception as e:
+            st.warning(f"Error: {e}")
+
+
+
+
+    # Pivot table operation
+    st.sidebar.subheader("Pivot Table Operation")
+    pivot_index = st.sidebar.selectbox("Select Index for Pivot Table", data.columns)
+    pivot_columns = st.sidebar.selectbox("Select Columns for Pivot Table", data.columns)
+    pivot_values = st.sidebar.selectbox("Select Values for Pivot Table", data.columns)
+    if st.sidebar.button("Apply Pivot Table"):
+        pivot_table_data = pd.pivot_table(data, values=pivot_values, index=pivot_index, columns=pivot_columns, aggfunc='mean')
+        st.subheader("Pivot Table Operation Result")
+        st.write(pivot_table_data)
+        st.session_state.groupby_result = pivot_table_data
+
+
+
     st.sidebar.title("Plot Configuration")
 
     # Select plot type
@@ -76,16 +136,6 @@ if uploaded_file is not None:
             # st.subheader("Pair Plot")
             fig = px.scatter_matrix(data[selected_columns], title="Pair Plot")
             st.plotly_chart(fig)
-
-            
-    # elif selected_plot == "Heatmap":
-    #     if len(selected_columns) >= 2:
-    #         st.subheader(f"Heatmap - {', '.join(selected_columns)}")
-    #         heatmap_data = data[selected_columns]
-    #         correlation_matrix = heatmap_data.corr()
-    #         fig, ax = plt.subplots(figsize=(10, 8))
-    #         sns.heatmap(correlation_matrix, annot=True, cmap="coolwarm", fmt=".2f", ax=ax)
-    #         st.pyplot(fig)
 
     elif selected_plot == "Violin Plot":
         if len(selected_columns) >= 2:
