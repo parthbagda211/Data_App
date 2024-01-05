@@ -14,7 +14,7 @@ if uploaded_file is not None:
     data = pd.read_csv(uploaded_file)
 
 
-    # Display the raw data
+    
     st.subheader("Statistics Of Data")
     st.write(data.describe())
 
